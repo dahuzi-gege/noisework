@@ -32,5 +32,5 @@ Disallow:
 User-agent: *
 Disallow: 
 
-Sitemap: http://www.noisework.cn/sitemap.xml
-Sitemap: http://www.noisework.cn/sitemap.html
+Sitemap: http://www.5201199.xyz/sitemap.xml
+Sitemap: http://www.5201199.xyz/sitemap.html
