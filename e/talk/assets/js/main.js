@@ -320,7 +320,7 @@ function initWaline(container, host) {
         const uid = host.split('-').pop(); // 从 host 中提取 uid
         init({
             el: `#${commentId}`, // 使用生成的唯一 ID
-            serverURL: 'https://ment.noisework.cn', //修改为你自己的地址
+            serverURL: 'https://ment.5201199.xyz', //修改为你自己的地址
             reaction: 'true', 
             meta: ['nick', 'mail', 'link'],
             requiredMeta: ['mail', 'nick'],
