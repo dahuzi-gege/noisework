@@ -1,45 +1,717 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=11" id="mixia_vpid">
-    <title>备用地址发布页</title>
-    <meta name="keywords" content="地址发布页">
-    <meta name="description" content="地址发布页">
-    <link rel="icon" href="../assets/favicon.png" type="image/png" />
-    <link rel="stylesheet" type="text/css" href="./css/style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="这是来自Young的个人主页，包含了多个关联站点的入口，你可以通过安装或访问它来获取更多有关Young站点的信息">
+	<meta name="keywords" content="Young,Young主页,诺伊斯,Young云盘,Young宝藏阁,Young导航,宝藏站点,宝藏博主,诺伊斯的主页,">
+    <meta itemprop="image" content="./assets/9147.png" />
+	<meta itemprop="image" content="./assets/9147.png" />
+	<meta itemprop="image" content="./assets/9147.png" />
+    <meta name="google-adsense-account" content="ca-pub-1078287385751140">
+    <link rel="icon" href="./assets/favicon.png" type="image/png" />
+    <title>Young主页</title>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.staticfile.net" crossorigin>
+    <link rel="preconnect" href="https://jsd.cdn.5201199.xyz" crossorigin>
+    <link rel="dns-prefetch" href="//note.5201199.xyz">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <link rel="preload" as="image" href="assets/suijpic/191437o3371I8.webp" fetchpriority="high">
+    <link rel="preload" as="image" href="assets/suijpic/023.5se6p3kcd840.webp" fetchpriority="high">
+    <!-- 图标引用 引入自托管fontawesome免费web包-->
+    <link rel="stylesheet" href="assets/fontawesome-free-6.7.2/css/all.css">
+     <!-- 图标引用 引入自托管fontawesome免费web包-->
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/terminal.css">
+    <link rel="stylesheet" href="css/fira_code.css">
+    <script src="js/jquery.min.js" defer></script>
+    <script src="https://cdn.staticfile.net/layer/3.1.1/layer.js" defer></script>
+    <script src="js/fetch.min.js" defer></script>
+    <script src="js/axios.min.js" defer></script>
+    <script src="js/parallax.min.js" defer></script>
+    <link rel="stylesheet" href="css/flotext.css" media="print" onload="this.media='all'">
+    <script src="js/flotext.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="./css/loading.css"> 
+    <!--  <link rel="stylesheet" href="css/tab.css" media="print" onload="this.media='all'">-->
+    <!--  <link rel="stylesheet" href="css/AD.css" media="print" onload="this.media='all'">-->
+    <!--  <link rel="stylesheet" href="css/Text.css">-->
+    <!--<link rel="stylesheet" href="css/rss.css" media="print" onload="this.media='all'">-->  
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="css/Right.css" media="print" onload="this.media='all'">
+    <script src="js/Right.js" defer></script>
+    <link rel="stylesheet" href="./css/waline.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="./css/friendlink.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="./css/hotindex.css" media="print" onload="this.media='all'"> 
+    <!--根据设备性能自动切换main.js-->  
+    
+    <script>
+        function hasWebGL() {
+            try {
+                const canvas = document.createElement('canvas');
+                return !!window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function whenDepsReady(cb){
+          if (window.Parallax && window.jQuery) { cb(); return; }
+          setTimeout(function(){ whenDepsReady(cb); }, 30);
+        }
+
+        (function(){
+          const hasAcceleration = hasWebGL();
+          whenDepsReady(function(){
+            var script = document.createElement('script');
+            script.src = hasAcceleration ? 'js/main.js' : 'js/lowmain.js';
+            script.defer = true;
+            document.head.appendChild(script);
+          });
+        })();
+    </script>
 </head>
 <body>
-    <div class="content">
-        <div class="title"> 👉备用地址发布页👈</div>
-    </br></a>
-        <nav class="cover-navigation cover-navigation--primary">
-            <ul class="navigation">
-                <li class="navigation__item"><a href="https://noisedaohang.netlify.app" target="_blank" title="">🔖导航备用1</a></li>
-                <li class="navigation__item"><a href="#" target="_blank" title="">🔖导航备用2</a></li></br></br>
-                <li class="navigation__item"><a href="#" target="_blank" title="">🔖云盘站备用1</a></li>
-                <li class="navigation__item"><a href="#" target="_blank" title="">🔖云盘站备用2</a></li>
-                <li class="navigation__item"><a href="#/" target="_blank" title="">🔖云盘站备用3</a></li></br></br>
-                <li class="navigation__item"><a href="#" target="_blank" title="">🔖效率集备用1</a></li>
-                <li class="navigation__item"><a href="# target="_blank" title="">🔖效率集备用2</a></li>
-                <li class="navigation__item"><a href="#" target="_blank" title="">🔖效率集备用3</a></li>
-                <li class="navigation__item"><a href="#" target="_blank" title="">🔖效率集备用4</a></li></br></br>
-                <li class="navigation__item"><a href="#" target="_blank" title="">🔖bookmark备用</a></li>
-                <li class="navigation__item"><a href="#" target="_blank" title="">🔖站点监测备用</a></li>
-                <li class="navigation__item"><a href="#" target="_blank" title="">🔖youtube订阅备用</a></li>
-            </ul>
-        </nav>
-    </a> </br></a>
-	<!-- 版权信息 -->
-		<div class="nav01_fooder"><a href="../index.html" rel="nofollow" target="_blank" title="主页">返回主页</a>&nbsp;&nbsp;|&nbsp;&nbsp; By YOUNG</div>
-		</div>
-		
-<body>
-    <div class="landscape"></div>
-    <div class="filter"></div>
-    <canvas id="canvas" width="1242" height="1000"></canvas>
-    <script type="text/javascript" src="./js/style.js"></script>
+    <script type="worker" src="worker.js"></script>
+     <!-- 右键菜单 -->
+<body oncontextmenu="openMenu(event)">
+    <div class="menu">
+        <ul class="menu-list01">
+            <li class="menu-item">
+                <a href="./e/zhichi/index.html" target="_blank" style="color: white; text-decoration: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512">
+                        <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
+                    </svg>
+                    <span style="margin-left: -4px;">赞赏</span>
+                </a>
+            </li>
+            <li class="menu-item" onclick="toggleFullScreen()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512">
+                    <path d="M200 32H56C42.7 32 32 42.7 32 56V200c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l40-40 79 79-79 79L73 295c-6.9-6.9-17.2-8.9-26.2-5.2S32 302.3 32 312V456c0 13.3 10.7 24 24 24H200c9.7 0 18.5-5.8 22.2-14.8s1.7-19.3-5.2-26.2l-40-40 79-79 79 79-40 40c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H456c13.3 0 24-10.7 24-24V312c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2l-40 40-79-79 79-79 40 40c6.9 6.9 17.2 8.9 26.2 5.2s14.8-12.5 14.8-22.2V56c0-13.3-10.7-24-24-24H312c-9.7 0-18.5 5.8-22.2 14.8s-1.7 19.3 5.2 26.2l40 40-79 79-79-79 40-40c6.9-6.9 8.9-17.2 5.2-26.2S209.7 32 200 32z"/>
+                </svg>
+                <span style="margin-left: 2px;">全屏</span>
+            </li>
+            <li class="menu-item" onclick="refreshPage()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z"/></svg>
+                <span style="margin-left: 2.3px;">刷新</span>
+            </li>
+            <li class="menu-item" onclick="goBack()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><path d="M0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32C28.7 32 0 60.7 0 96L0 416zM128 256c0-6.7 2.8-13 7.7-17.6l112-104c7-6.5 17.2-8.2 25.9-4.4s14.4 12.5 14.4 22l0 208c0 9.5-5.7 18.2-14.4 22s-18.9 2.1-25.9-4.4l-112-104c-4.9-4.5-7.7-10.9-7.7-17.6z"/></svg>
+                <span style="margin-left: 2.7px;">返回</span>
+            </li>
+            <li class="menu-item" onclick="changeMode()">
+                <a href="#" style="color: white; text-decoration: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M258.6 0c-1.7 0-3.4 .1-5.1 .5C168 17 115.6 102.3 130.5 189.3c2.9 17 8.4 32.9 15.9 47.4L32 224H29.4C13.2 224 0 237.2 0 253.4c0 1.7 .1 3.4 .5 5.1C17 344 102.3 396.4 189.3 381.5c17-2.9 32.9-8.4 47.4-15.9L224 480v2.6c0 16.2 13.2 29.4 29.4 29.4c1.7 0 3.4-.1 5.1-.5C344 495 396.4 409.7 381.5 322.7c-2.9-17-8.4-32.9-15.9-47.4L480 288h2.6c16.2 0 29.4-13.2 29.4-29.4c0-1.7-.1-3.4-.5-5.1C495 168 409.7 115.6 322.7 130.5c-17 2.9-32.9 8.4-47.4 15.9L288 32V29.4C288 13.2 274.8 0 258.6 0zM256 224a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>
+                    <span style="margin-left: -4.5px;">模式</span>
+                </a>
+            </li>
+            <!-- 弹出图片效果 -->
+            <li class="menu-item">
+                <a href="#" style="color: white; text-decoration: none;" onclick="showImage1()">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="18" viewBox="0 0 576 512">
+                        <path d="M385.2 167.6c6.4 0 12.6 .3 18.8 1.1C387.4 90.3 303.3 32 207.7 32 100.5 32 13 104.8 13 197.4c0 53.4 29.3 97.5 77.9 131.6l-19.3 58.6 68-34.1c24.4 4.8 43.8 9.7 68.2 9.7 6.2 0 12.1-.3 18.3-.8-4-12.9-6.2-26.6-6.2-40.8-.1-84.9 72.9-154 165.3-154zm-104.5-52.9c14.5 0 24.2 9.7 24.2 24.4 0 14.5-9.7 24.2-24.2 24.2-14.8 0-29.3-9.7-29.3-24.2 .1-14.7 14.6-24.4 29.3-24.4zm-136.4 48.6c-14.5 0-29.3-9.7-29.3-24.2 0-14.8 14.8-24.4 29.3-24.4 14.8 0 24.4 9.7 24.4 24.4 0 14.6-9.6 24.2-24.4 24.2zM563 319.4c0-77.9-77.9-141.3-165.4-141.3-92.7 0-165.4 63.4-165.4 141.3S305 460.7 397.6 460.7c19.3 0 38.9-5.1 58.6-9.9l53.4 29.3-14.8-48.6C534 402.1 563 363.2 563 319.4zm-219.1-24.5c-9.7 0-19.3-9.7-19.3-19.6 0-9.7 9.7-19.3 19.3-19.3 14.8 0 24.4 9.7 24.4 19.3 0 10-9.7 19.6-24.4 19.6zm107.1 0c-9.7 0-19.3-9.7-19.3-19.6 0-9.7 9.7-19.3 19.3-19.3 14.5 0 24.4 9.7 24.4 19.3 .1 10-9.9 19.6-24.4 19.6z"/>
+                    </svg>
+                    <span style="margin-left: -4.5px;">联系</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="./fb/index.html" target="_blank" style="color: white; text-decoration: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M256 464a208 208 0 1 1 0-416 208 208 0 1 1 0 416zM256 0a256 256 0 1 0 0 512A256 256 0 1 0 256 0zM376.9 294.6c4.5-4.2 7.1-10.1 7.1-16.3c0-12.3-10-22.3-22.3-22.3H304V160c0-17.7-14.3-32-32-32l-32 0c-17.7 0-32 14.3-32 32v96H150.3C138 256 128 266 128 278.3c0 6.2 2.6 12.1 7.1 16.3l107.1 99.9c3.8 3.5 8.7 5.5 13.8 5.5s10.1-2 13.8-5.5l107.1-99.9z"/></svg>
+                    <span style="margin-left: -4.5px;">备用</span>
+                </a>
+            </li>
+            <li class="menu-item-divider"></li>
+            <li class="menu-item menu-item-danger">
+                <a href="#" style="color: white; text-decoration: none;"></a>
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zm175 79c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"/></svg>
+                <span style="margin-left: 2px;">关闭</span>
+            </li>
+        </ul>
+    </div>
+    <!-- 弹出图片的覆盖层 -->
+    <div id="imageOverlay1" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000;">
+        <img id="popupImage1" loading="lazy" decoding="async" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);" src="" alt="Popup Image">
+        <a href="javascript:void(0)" onclick="closePopup()" style="position:absolute; top:10px; right:10px; color:white; font-size:24px;">&times;</a>
+    </div>
+    <div id="imageOverlay2" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000;">
+        <img id="popupImage2" loading="lazy" decoding="async" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);" src="" alt="Popup Image">
+        <a href="javascript:void(0)" onclick="closePopup()" style="position:absolute; top:10px; right:10px; color:white; font-size:24px;">&times;</a>
+    </div>
+    <!-- loading加载--> 
+    <div id="spinner-container">
+        <div class="spinner"></div>
+    </div>
+     <!-- 底层背景 -->
+    <div id="low-bg"></div>
+    <!-- 添加Service Worker -->
+    <script>
+     // 延迟注册Service Worker
+    if ('serviceWorker' in navigator) {
+    setTimeout(function() {
+        navigator.serviceWorker.register('service-worker.js', {
+            scope: '/',
+            updateViaCache: 'none'
+        }).catch(console.error);
+    }, 2000);
+}
+        // 延迟到页面加载完成后再注册 Service Worker
+        /*if ('serviceWorker' in navigator) {
+          window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+              registration.onupdatefound = function() {
+                var installingWorker = registration.installing;
+                installingWorker.onstatechange = function() {
+                  if (installingWorker.state === 'installed') {
+                    if (navigator.serviceWorker.controller) {
+                      // 有新内容，自动刷新页面
+                      window.location.reload();
+                    }
+                  }
+                };
+              };
+            });
+          });
+        }*/
+    </script>
+    <div class="node" id="node"></div>
+    <div class="cursor" id="cursor"></div>
+    <div id="sence">
+        <div id="background" data-depth="0.8"></div>
+        <div id="bg" data-depth="0.6"></div>   
+		<script src="js/suiji-picture.js" defer></script> 
+    </div>
+    <div class="main">
+        <div class="about">
+            <h2 class="chtitle">欢迎访问<span>Young</span>主页</h2>
+            <div id="clear">
+                <div id="avatar">
+                    <a title="点击可切换背景" target="_blank" id='morelink' class="bt" onclick="changeBackground()"><i class="fa-solid fa-compass"></i></a>
+                </div>
+                <div id="persontag">
+                    <div class="line">🌟&nbsp;芝士星球<div class="tag">【探索】</div>&nbsp;发现者</div>
+                    <div class="line">📷&nbsp;爱<div class="tag">'音乐'</div>'电子'<div class="tag">'动漫'</div>【自由派】</div>
+                    <div class="line">🕹️&nbsp;SWITCH&nbsp;【塞尔达传说】</div>
+                    <div class="line">🎁&nbsp;知行合一，努力才有收获</div>
+                </div>
+                <div id="terminal"></div>
+            </div>
+                   
+        <!-- rss订阅文字代码-->
+        <div class="rss-container">
+            <div id="rss-item"></div>
+            <div class="close-button" id="close-button">X</div>
+          </div>
+        <!-- 弹出文字代码-->
+        <div class="popup">
+            <p id="popupText"></p>
+        </div>
+        <!-- 隐藏式数字时钟-->
+        <div class="clock" id="clock">00:00:00</div>
+        <!--浮空文字 -->
+        <div class="floating-text" id="floatingText1"></div>
+        <div class="floating-text" id="floatingText2"></div>
+        <div class="floating-text" id="floatingText3"></div>
+        <div class="floating-text" id="floatingText4"></div>
+        <div class="floating-text" id="floatingText5"></div>
+        <div class="floating-text" id="floatingText6"></div>
+        <div class="floating-text" id="floatingText7"></div>
+        <div class="floating-text" id="floatingText8"></div>
+        <div class="floating-text" id="floatingText9"></div>
+         <!--向下滑动提示-->
+        <div class="scroll-down">
+            <span>向下滑动查看</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M0 0h24v24H0z" fill="none"/>
+                <path d="M12 16l-6-6h12z"/>
+            </svg>
+        </div>
+       <!--向下滑动提示结束-->
+        <div class="find">
+            <h2 class="chtitle"><span>社交</span>媒体</h2>
+            <div id="linkbox">
+                <a href="https://twitter.com/" target="_blank">
+                    <div class="item" style="--color: rgba(40, 169, 224,0.3)">
+                        <div class="bg" style="background-color:rgb(40, 169, 224)"></div>
+                        <div class="inner"><i class="fa-brands fa-x-twitter"></i><span>Twitter</span></div>
+                    </div>
+                </a>
+                <a href="https://github.com/" target="_blank">
+                    <div class="item" style="--color:rgba(53, 53, 53,0.3)">
+                        <div class="bg" style="background-color:rgb(53, 53, 53)"></div>
+                        <div class="inner"> <i class="fa-brands fa-github"></i><span>Github</span></div>
+                    </div>
+                </a>
+               <!-- 弹出效果 -->
+               <a href="javascript:void(0)" style="color: white; text-decoration: none;" onclick="showImage2(); return false;">
+                <div class="item" style="--color:rgba(0, 102, 255,0.3)">
+                    <div class="bg" style="background-color:rgb(21, 211, 201)"></div>
+                    <div class="inner"> <i class="fa-brands fa-weixin"></i><span>公众号</span></div>
+                </div>
+            </a>
+               </a>
+                <a href="#"target="_blank">
+                    <div class="item" style="--color:rgba(35, 45, 55,0.3)">
+                        <div class="bg" style="background-color: rgb(0, 126, 216);"></div>
+                        <div class="inner"><i class="fa-solid fa-image"></i><span>相册图册</span></div>
+                    </div>
+                </a>
+                <a href="#" target="_blank">
+                    <div class="item" style="--color:rgba(35, 45, 55,0.3)">
+                        <div class="bg" style="background-color:rgb(35, 45, 55)"></div>
+                        <div class="inner"> <i class="fa-brands fa-telegram"></i><span>TG频道</span></div>
+                    </div>
+                </a>
+                <a href="https://biji.5201199.xyz" target="_blank">
+                    <div class="item" style="--color:rgba(1, 193, 157,0.3)">
+                        <div class="bg" style="background-color: rgb(1, 193, 157);"></div>
+                        <div class="inner"> <i class="fa-solid fa-blog"></i><span>Blog</span></div>
+                    </div>
+                </a>
+                <!-- 弹出效果 -->
+                <a href="javascript:void(0)" style="color: white; text-decoration: none;" onclick="showImage1(); return false;">
+                    <div class="item" style="--color:rgba(35, 45, 55,0.3)">
+                        <div class="bg" style="background-color: rgb(43, 41, 41);"></div>
+                        <div class="inner"> <i class="fa-brands fa-weixin"></i><span>微信号</span></div>
+                    </div>
+                </a>
+                <a href="#" target="_blank">
+                    <div class="item" style="--color:rgba(28, 64, 100)">
+                        <div class="bg" style="background-color:rgb(220, 92, 137)"></div>
+                        <div class="inner"><i class="fa-solid fa-user-astronaut"></i><span>少数派</span></div>
+                    </div>
+                </a>    
+            </div>
+        </div>
+			<!--  网站合集全部注释
+        <div class="work">
+            <h2 class="chtitle"><span>网站</span>合集</h2>
+            <div class="workbox">
+                 <a href="./home.html" title="右滑动查看,mac用户请用键盘左右键或触控板上下滑动查看，PC用户鼠标滚轮向右查看">
+                    <div id="first"></i><i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span style="font-size: 17px;">◉切换风格模式</span>
+                  </div>
+                  </a>
+				
+                <div class="project">
+                    <i class="fa-solid fa-star"></i>
+                    <a href="#/moyu/"target="_blank"><h3>打工人日历</h3></a>
+                    <p>提醒您适当摸鱼</p>
+                    <div class="language"><div style="--color:#e34c26">没钱可以赚，但命只有一条</div></div>
+                </div>
+                <div class="project">
+                    <i class="fa-solid fa-star"></i>
+                    <a href="./soso/index.html"target="_blank"><h3>Book Mark 索引</h3></a>
+                    <p>书签搜索</p>
+                    <div class="language"><div style="--color:#e34c26">从收录的上万个书签中搜索</div></div>
+                </div>
+                <div class="project">
+                    <i class="fa-solid fa-star"></i>
+                    <a href="./e/soso/index.html"target="_blank"><h3>JUST SOSO</h3></a>
+                    <p>个人自定义搜索</p>
+                    <div class="language"><div style="--color:#e34c26">搜软件，搜插件</div></div>
+                </div>
+                <div class="project">
+                    <i class="fa-solid fa-star"></i>
+                    <a href="./fb/index.html"target="_blank"><h3>备用地址页</h3></a>
+                    <p>一些站点的备用地址</p>
+                    <div class="language"><div style="--color:#e34c26">多域名，多备用</div></div>
+                </div>
+				<!--
+                <a href="./home.html" target="_blank">
+                    <div id="last"><i class="fa-sharp fa-solid fa-magnifying-glass"></i><span>◉切换风格模式</span></div>
+                </a>
+                </div>
+                </div>
+				-->
+			                <!-- 音乐 -->
+                </br>
+                <div class="work">
+                    <h2 class="chtitle"><span>音乐</span>赏析</span></h2>
+                    <link rel="stylesheet" href="css/APlayer.min.css">
+                    <script src="js/APlayer.min.js"></script>
+                    <script>
+                        (function () {
+                            var apis = [
+                                'https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r',
+                                'https://api.injahow.cn/meting/?server=:server&type=:type&id=:id&r=:r'
+                            ];
 
+                            function withTimeout(url, timeoutMs) {
+                                return new Promise(function (resolve, reject) {
+                                    var controller = new AbortController();
+                                    var timer = setTimeout(function () {
+                                        controller.abort();
+                                        reject(new Error('timeout'));
+                                    }, timeoutMs);
+
+                                    fetch(url, { signal: controller.signal, cache: 'no-store' })
+                                        .then(function (res) {
+                                            clearTimeout(timer);
+                                            resolve(res);
+                                        })
+                                        .catch(function (err) {
+                                            clearTimeout(timer);
+                                            reject(err);
+                                        });
+                                });
+                            }
+
+                            function buildTestUrl(tpl) {
+                                return tpl
+                                    .replace(':server', 'netease')
+                                    .replace(':type', 'playlist')
+                                    .replace(':id', '17613688171')
+                                    .replace(':r', String(Date.now()));
+                            }
+
+                            function loadMeting() {
+                                var script = document.createElement('script');
+                                script.src = 'js/Meting.min.js';
+                                script.defer = true;
+                                document.head.appendChild(script);
+                            }
+
+                            (async function () {
+                                for (var i = 0; i < apis.length; i++) {
+                                    var tpl = apis[i];
+                                    try {
+                                        var res = await withTimeout(buildTestUrl(tpl), 1200);
+                                        if (!res || !res.ok) continue;
+                                        await res.text();
+                                        window.meting_api = tpl;
+                                        return;
+                                    } catch (e) {
+                                    }
+                                }
+                                window.meting_api = apis[0];
+                            })().finally(loadMeting);
+                        })();
+                    </script>
+                    <div id="music-player">
+                        <meting-js list-max-height="130px" server="netease" type="playlist" autoplay="false"
+                            id="17613688171">
+                        </meting-js>
+                    </div>
+                </div>
+                <br>
+			
+                <!-- 热榜-->
+            </br>
+            <div class="work">
+                <h2 class="chtitle"><span>热榜</span>快讯</span></h2>
+                <div class="hotindex">
+                    <div class="grid-container">
+                        <div class="bg-orange-500 text-white p-4 rounded-lg shadow-lg hotcard" id="douyin">
+                            <div class="header">
+                              <img loading="lazy" decoding="async" src="https://www.douyin.com/favicon.ico" alt="抖音">
+                              <h2 class="text-lg font-bold">抖音</h2>
+                            </div>
+                            <p class="update-time">数据更新时间: -</p>
+                            <span class="refresh-icon" onclick="refreshData('douyin')"><i class="fas fa-refresh"></i></span>
+                            <div class="content">
+                              <ol class="list-decimal pl-5" id="douyin-list">
+                              </ol>
+                            </div>
+                          </div>
+                          <div class="bg-indigo-500 text-white p-4 rounded-lg shadow-lg hotcard" id="hellogithub">
+                            <div class="header">
+                              <img loading="lazy" decoding="async" src="https://hellogithub.com/favicon/android-icon-192x192.png" alt="HelloGitHub">
+                              <h2 class="text-lg font-bold">HelloGitHub</h2>
+                            </div>
+                            <p class="update-time">数据更新时间: -</p>
+                            <span class="refresh-icon" onclick="refreshData('hellogithub')"><i class="fas fa-refresh"></i></span>
+                            <div class="content">
+                              <ol class="list-decimal pl-5" id="hellogithub-list">
+                              </ol>
+                            </div>
+                          </div>
+                          <div class="bg-green-500 text-white p-4 rounded-lg shadow-lg hotcard" id="bilibili">
+                            <div class="header">
+                              <img loading="lazy" decoding="async" src="https://www.bilibili.com/favicon.ico" alt="哔哩哔哩">
+                              <h2 class="text-lg font-bold">哔哩哔哩</h2>
+                            </div>
+                            <p class="update-time">数据更新时间: -</p>
+                            <span class="refresh-icon" onclick="refreshData('bilibili')"><i class="fas fa-refresh"></i></span>
+                            <div class="content">
+                              <ol class="list-decimal pl-5" id="bilibili-list">
+                              </ol>
+                            </div>
+                          </div>
+                      <div class="bg-blue-500 text-white p-4 rounded-lg shadow-lg hotcard" id="zhihu">
+                        <div class="header">
+                          <img loading="lazy" decoding="async" src="https://static.zhihu.com/heifetz/favicon.ico" alt="知乎">
+                          <h2 class="text-lg font-bold">知乎</h2>
+                        </div>
+                        <p class="update-time">数据更新时间: -</p>
+                        <span class="refresh-icon" onclick="refreshData('zhihu')"><i class="fas fa-refresh"></i></span>
+                        <div class="content">
+                          <ol class="list-decimal pl-5" id="zhihu-list">
+                          </ol>
+                        </div>
+                      </div>
+                      <div class="bg-red-500 text-white p-4 rounded-lg shadow-lg hotcard" id="weibo">
+                        <div class="header">
+                          <img loading="lazy" decoding="async" src="https://sina.com.cn/favicon.ico" alt="微博">
+                          <h2 class="text-lg font-bold">微博</h2>
+                        </div>
+                        <p class="update-time">数据更新时间: -</p>
+                        <span class="refresh-icon" onclick="refreshData('weibo')"><i class="fas fa-refresh"></i></span>
+                        <div class="content">
+                          <ol class="list-decimal pl-5" id="weibo-list">
+                          </ol>
+                        </div>
+                      </div>
+                      <div class="bg-purple-500 text-white p-4 rounded-lg shadow-lg hotcard" id="baidu">
+                        <div class="header">
+                          <img loading="lazy" decoding="async" src="https://www.baidu.com/favicon.ico" alt="百度贴吧">
+                          <h2 class="text-lg font-bold">百度贴吧</h2>
+                        </div>
+                        <p class="update-time">数据更新时间: -</p>
+                        <span class="refresh-icon" onclick="refreshData('baidu')"><i class="fas fa-refresh"></i></span>
+                        <div class="content">
+                          <ol class="list-decimal pl-5" id="baidu-list">
+                          </ol>
+                        </div>
+                      </div>
+                      <div class="bg-yellow-500 text-white p-4 rounded-lg shadow-lg hotcard" id="toutiao">
+                        <div class="header">
+                          <img loading="lazy" decoding="async" src="https://www.toutiao.com/favicon.ico" alt="今日头条">
+                          <h2 class="text-lg font-bold">今日头条</h2>
+                        </div>
+                        <p class="update-time">数据更新时间: -</p>
+                        <span class="refresh-icon" onclick="refreshData('toutiao')"><i class="fas fa-refresh"></i></span>
+                        <div class="content">
+                          <ol class="list-decimal pl-5" id="toutiao-list">
+                          </ol>
+                        </div>
+                      </div>
+                      <div class="bg-teal-500 text-white p-4 rounded-lg shadow-lg hotcard" id="v2ex">
+                        <div class="header">
+                          <img loading="lazy" decoding="async" src="https://s2.loli.net/2024/12/12/kz5t8fuXBLl6cFi.jpg" alt="V2EX">
+                          <h2 class="text-lg font-bold">V2EX</h2>
+                        </div>
+                        <p class="update-time">数据更新时间: -</p>
+                        <span class="refresh-icon" onclick="refreshData('v2ex')"><i class="fas fa-refresh"></i></span>
+                        <div class="content">
+                          <ol class="list-decimal pl-5" id="v2ex-list">
+                          </ol>
+                        </div>
+                      </div>
+                    </div>
+                   </div>
+                </div>
+
+                <!-- 友情链接 -->
+                <div class="work">
+                    <h2 class="chtitle"><span>友情</span>链接</span></h2>
+                    <div class="friendcardindex">
+                        <div class="friendlinks-container">
+                            <div class="friendlinks-card">
+                                <div class="avatar">
+                                    <a href="work/crc.html">
+                                        <img alt="" loading="lazy" decoding="async"
+                                            src="https://s2.loli.net/2024/10/04/2VD13OlJKjR6za5.jpg">
+                                    </a>
+                                </div>
+                                <div class="info">
+                                    <a class="friendname" target="_blank" href="work/crc.html">待添加</a>
+                                    <p class="frienddescription">未来可期</p>
+                                </div>
+                            </div>
+                            <div class="friendlinks-card">
+                                <div class="avatar">
+                                    <a href="#">
+                                        <img alt="" loading="lazy" decoding="async"
+                                            loading="lazy" decoding="async" src="https://fastly.jsdelivr.net/gh/rcy1314/tuchuang@main/uPic/33s.jpeg">
+                                    </a>
+                                </div>
+                                <div class="info">
+                                    <a class="friendname" target="_blank" href="#">待添加</a>
+                                    <p class="frienddescription">未来可期</p>
+                                </div>
+                            </div>
+                            <div class="friendlinks-card">
+                                <div class="avatar">
+                                    <a href="#">
+                                        <img alt="" loading="lazy" decoding="async"
+                                            loading="lazy" decoding="async" src="https://fastly.jsdelivr.net/gh/rcy1314/tuchuang@main/uPic/43e.jpeg">
+                                    </a>
+                                </div>
+                                <div class="info">
+                                    <a class="friendname" target="_blank" href="#">待添加</a>
+                                    <p class="frienddescription">未来可期</p>
+                                </div>
+                            </div>
+                            <div class="friendlinks-card">
+                                <div class="avatar">
+                                    <a href="#">
+                                        <img alt="" loading="lazy" decoding="async"
+                                            loading="lazy" decoding="async" src="https://fastly.jsdelivr.net/gh/rcy1314/tuchuang@main/uPic/335r.jpeg">
+                                    </a>
+                                </div>
+                                <div class="info">
+                                    <a class="friendname" target="_blank" href="#">待添加</a>
+                                    <p class="frienddescription">未来可期</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </br>
+
+					<!--  B站收藏全部注释 - 整段注释开始 -->
+                    <!-- B站收藏
+                    <div class="work">
+                        <h2 class="chtitle"><span>B站</span>收藏夹</span></h2>
+                        <div class="bilibiliindex" style="background-color: #1e1d1dce; height: 25vh;">
+                            <div class="bilibilititle-left">
+                                <img loading="lazy" decoding="async" src="./assets/r1.png" alt="B站收藏夹" class="zoominimage">
+                            </div>
+                            <iframe src="https://www.5201199.xyz/e/bili/index.html?id=3271958393" loading="lazy" style="width: 70%; height: 100%; border: none; "></iframe>
+                            <div class="bilibilititle-right">
+                                <img loading="lazy" decoding="async" src="./assets/r3.png" alt="等你来观看" class="zoominimage">
+                            </div>
+                        </div>
+		        	B站收藏结束-->
+
+                     <!-- 游戏加载
+                    <div class="pc-only">
+                    </br>
+                    <div class="work">
+                      <h2 class="chtitle"><span>游戏</span>时间</h2>
+                      <div class="gameindex" style="background-color: #110f0fbc; border-radius: 20px; width: 100%; height: 35vh;">
+                        <iframe src="./e/fcgame/index.html" loading="lazy" style="width: 100%; height: 100%; border: none; "></iframe>
+                      </div>
+                    </div>
+                  </div>
+                -->
+               </br>
+                <!-- 评论区 -->
+                            <!-- 图标按钮 -->
+                            <div class="menu-button">
+                                <div class="line-box">
+                                    <div class="line"></div>
+                                    <div class="line"></div>
+                                    <div class="line"></div>
+                                </div>
+                            </div>
+                            <!-- 菜单列表 -->
+                            
+                    <!--隐藏式页脚-->
+                    <div id="footer">
+                        <p>本站已运行: <span id="days"></span></p>
+                        <p> ღゝ◡╹ノ♡ <a href="#">Young主页</a></p>
+                    </div>
+
+                <!--向下滑动监听-->
+                    <script>
+                        window.addEventListener('DOMContentLoaded', (event) => {
+                    var scrollDown = document.querySelector('.scroll-down');
+                    function handleScroll() {
+                // 检查屏幕宽度是否小于或等于768px
+                if (window.innerWidth <= 768) {
+                    var scrollPos = window.pageYOffset;
+                    var windowHeight = window.innerHeight;
+                    var documentHeight = document.documentElement.scrollHeight;
+        
+                    if (scrollPos + windowHeight >= documentHeight) {
+                        scrollDown.style.display = 'none';
+                    } else {
+                        scrollDown.style.display = 'block';
+                    }
+                }
+            }
+  
+            function handleButtonClick() {
+                window.scrollBy({
+                    top: window.innerHeight,
+                    behavior: 'smooth'
+                });
+            }
+        
+            scrollDown.addEventListener('click', handleButtonClick);
+            window.addEventListener('scroll', handleScroll);
+            window.addEventListener('resize', handleScroll); // 添加resize事件监听，以便在窗口大小变化时重新检查
+        
+            // 初始化滚动监听
+            handleScroll();
+        });
+        </script>     
+    <!--向下滑动监听结束-->    
+    <!--所有弹出图片js-->  
+    <script>
+        //微信图
+        function showImage1() {
+            var imagePath = "./lianxi/weixin.png";
+            document.getElementById('popupImage1').src = imagePath;
+            document.getElementById('imageOverlay1').style.display = 'block';
+        }
+    
+        document.getElementById('imageOverlay1').addEventListener('click', function() {
+            this.style.display = 'none';
+            document.getElementById('popupImage1').src = '';
+        });
+	/*    全部注释
+        //公众号图
+        function showImage2() {
+            var imagePath = "./assets/gongzhonghao.jpg";
+            document.getElementById('popupImage2').src = imagePath;
+            document.getElementById('imageOverlay2').style.display = 'block';
+        }
+    
+        document.getElementById('imageOverlay2').addEventListener('click', function() {
+            this.style.display = 'none';
+            document.getElementById('popupImage2').src = '';
+        });
+		*/
+    </script>
+<script src="js/crypto-js.js" defer></script>
+    <script src="js/nodecursor-jquery.js" defer></script>
+    <script src="js/terminal.js" defer></script>
+    <script src="js/loading.js" defer></script>
+    <!--  <script src="js/Text.js"></script> -->  
+    <script src="js/sound.js" defer></script>
+    <script src="js/hotindex.js"></script>
+    <script src="js/clock.js"></script>
+     <script>
+        if (!/Android|webOS|iPhone|iPod|BlackBerry|iPad|Windows Phone/i.test(navigator.userAgent)) {
+          var script = document.createElement('script');
+          script.src = 'js/mouse-click.js';
+          script.defer = true;
+          document.head.appendChild(script);
+        }
+      </script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js" defer></script>
+      <script>
+      function gzipCompress(data) {
+          const compressed = pako.gzip(JSON.stringify(data));
+          return btoa(String.fromCharCode.apply(null, compressed));
+      }
+      </script>
 </body>
+ <!-- 弹窗信息提醒代码开始 -->
+ <script>
+    window.addEventListener('load', function() {
+        var currentTime = new Date().getHours();
+        var greeting;
+        if (currentTime < 5) {
+            greeting = "凌晨好！";
+        } else if (currentTime < 8) {
+            greeting = "早上好！";
+        } else if (currentTime < 11) {
+            greeting = "上午好！";
+        } else if (currentTime < 13) {
+            greeting = "中午好！";
+        } else if (currentTime < 18) {
+            greeting = "下午好！";
+        } else if (currentTime < 19) {
+            greeting = "傍晚好！";
+        } else if (currentTime < 24) {
+            greeting = "晚上好！";
+        }
+     
+		layer.msg(greeting + "👏欢迎你的访问！");
+    });
+    </script>
+    <!-- 弹窗信息提醒代码结束 -->
 </html>
