@@ -17,8 +17,8 @@
 	<meta name="google-adsense-account" content="ca-pub-1078287385751140">
 	<link rel="stylesheet" href="./css/home-style.css">
 	<link rel="stylesheet" href="./css/home-rss.css" media="print" onload="this.media='all'">
-	<!-- 图标引用 引入自托管fontawesome免费web包 - 延迟加载避免阻塞渲染 -->
-    <link rel="stylesheet" href="assets/fontawesome-free-6.7.2/css/all.css" media="print" onload="this.media='all'">
+	<!-- 图标引用 引入自托管fontawesome免费web包-->
+    <link rel="stylesheet" href="assets/fontawesome-free-6.7.2/css/all.css">
      <!-- 图标引用 引入自托管fontawesome免费web包-->
 	<link rel="stylesheet" href="./css/Right.css">
 	<link rel="manifest" href="manifest.json">
@@ -138,73 +138,17 @@
 		</div>
 	 <!--音乐-->
      <link rel="stylesheet" href="./css/home-APlayer.min.css">  
-     <script src="./js/APlayer.min.js"></script>
-     <script>
-		(function () {
-			var apis = [
-				'https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r',
-				'https://api.injahow.cn/meting/?server=:server&type=:type&id=:id&r=:r'
-			];
-
-			function withTimeout(url, timeoutMs) {
-				return new Promise(function (resolve, reject) {
-					var controller = new AbortController();
-					var timer = setTimeout(function () {
-						controller.abort();
-						reject(new Error('timeout'));
-					}, timeoutMs);
-
-					fetch(url, { signal: controller.signal, cache: 'no-store' })
-						.then(function (res) {
-							clearTimeout(timer);
-							resolve(res);
-						})
-						.catch(function (err) {
-							clearTimeout(timer);
-							reject(err);
-						});
-				});
-			}
-
-			function buildTestUrl(tpl) {
-				return tpl
-					.replace(':server', 'netease')
-					.replace(':type', 'playlist')
-					.replace(':id', '128460001')
-					.replace(':r', String(Date.now()));
-			}
-
-			function loadMeting() {
-				var script = document.createElement('script');
-				script.src = './js/Meting.min.js';
-				script.defer = true;
-				document.head.appendChild(script);
-			}
-
-			(async function () {
-				for (var i = 0; i < apis.length; i++) {
-					var tpl = apis[i];
-					try {
-						var res = await withTimeout(buildTestUrl(tpl), 1200);
-						if (!res || !res.ok) continue;
-						await res.text();
-						window.meting_api = tpl;
-						return;
-					} catch (e) {
-					}
-				}
-				window.meting_api = apis[0];
-			})().finally(loadMeting);
-		})();
-     </script>
+     <script src="./js/jquery.min.js" defer></script>
+     <script src="./js/APlayer.min.js" defer></script>
+     <script src="./js/Meting.min.js" defer></script>
     <!-- 在手机尺寸下显示的导航按钮 -->
     <div class="mobile-nav-button">
 		<a title="点击可弹出侧边栏"><i class="fa-solid fa-list" style="color: #fcfcfc; font-size: 23px;"></i></a>
     </div>  
 	  <!--侧边-->
-	<div class="Young-filter"></div>
-	<div class="Young-main">
-		<div class="Young-left">
+	<div class="noise-filter"></div>
+	<div class="noise-main">
+		<div class="noise-left">
 			<!--PC头像-->
 			<div class="logo" id="logoDiv" onclick="changeImage()"> 
 				<!-- 添加了id和点击事件 -->
@@ -266,7 +210,7 @@
 						<class="title">《我的B站收藏夹视频》
 							<hr class="dashed">
 					</div>
-                    <iframe data-src="https://www.5201199.xyz/e/bili/index.html?id=3271958393" loading="lazy" frameborder="0"></iframe>
+                    <iframe src="https://www.5201199.xyz/e/bili/index.html?id=3271958393" loading="lazy" frameborder="0"></iframe>
 				</ul>
 			</div>
 			<!-- B站收藏结束-->
@@ -374,7 +318,7 @@
 			</div>
 			<!-- 随机一言结束-->
 			</div>
-			<div class="Young-right">
+			<div class="noise-right">
 				<header>
 					<!-- 手机页面头部logo -->
 					<div class="mobile-logo" id="mobileLogoDiv" onclick="switchImage()">
@@ -774,7 +718,7 @@
                                                             <img loading="lazy" decoding="async" src="./assets/favicon1.png" alt="">
 														</div>
 								
-													</a><a class="projectItem a" target="_blank" href="https://Young.zhubai.love">
+													</a><a class="projectItem a" target="_blank" href="https://noise.zhubai.love">
 														<div class="projectItemLeft">
 															<h1>竹白</h1>
 															<p>竹白专栏</p>
@@ -940,94 +884,91 @@
 			</script>
 			<script src="./js/emb.js" async></script>
 	<script>
-		// 延迟加载非关键API请求，避免阻塞首屏渲染
-		window.addEventListener('load', function() {
-			// 使用 requestIdleCallback 在浏览器空闲时执行，回退使用 setTimeout
-			var idleCallback = window.requestIdleCallback || function(cb) { setTimeout(cb, 1); };
-			
-			idleCallback(function() {
-				// 请求网盘资源更新
-				fetch('https://www.pan.5201199.xyz/api/search')
-					.then(response => response.json())
-					.then(data => {
+		// 使用 fetch API 请求网盘资源更新 URL
+		fetch('https://www.pan.5201199.xyz/api/search')
+			.then(response => response.json())
+			.then(data => {
+				// 检查data是否为null
+				if (data === null) {
+					// 如果data为null，显示默认错误消息
+					const contentDiv = document.querySelector('.ziyuan');
+					const p = document.createElement('p');
+					p.textContent = '请求失败，没有返回有效信息';
+					contentDiv.appendChild(p);
+				} else {
+					// 如果data不是null，检查code字段
+					if (data.code === 200) {
+						// 如果code是200，显示title和url字段的信息
 						const contentDiv = document.querySelector('.ziyuan');
-						if (!contentDiv) return;
-						if (data === null) {
+						data.data.items.forEach(item => {
 							const p = document.createElement('p');
-							p.textContent = '请求失败，没有返回有效信息';
+							p.innerHTML = `<strong>${item.title}</strong> - <a href="${item.url}" target="_blank">链接🔗 </a>`;
+							p.style.margin = '0.2em 0'; // 添加0.2的上下间隔
 							contentDiv.appendChild(p);
-						} else if (data.code === 200) {
-							data.data.items.forEach(item => {
-								const p = document.createElement('p');
-								p.innerHTML = `<strong>${item.title}</strong> - <a href="${item.url}" target="_blank">链接🔗 </a>`;
-								p.style.margin = '0.2em 0';
-								contentDiv.appendChild(p);
-							});
-						} else {
-							const p = document.createElement('p');
-							p.textContent = data.message || '请求失败，没有返回有效信息';
-							contentDiv.appendChild(p);
-						}
-					})
-					.catch(error => { console.error('请求出错:', error); });
-			});
-
-			idleCallback(function() {
-				// 请求每日60s新闻
-				fetch('https://60s-api.viki.moe/v2/60s?encoding=text')
-					.then(response => response.text())
-					.then(text => {
-						const contentDiv = document.querySelector('.content');
-						if (!contentDiv) return;
-						
-						contentDiv.innerHTML = '';
-						const lines = text.split('\n').filter(line => line.trim());
-						
-						if (lines.length > 0) {
-							const title = document.createElement('h3');
-							title.textContent = lines[0];
-							contentDiv.appendChild(title);
-							
-							for (let i = 1; i < lines.length; i++) {
-								const line = lines[i];
-								if (line.startsWith('【微语】')) {
-									const tipP = document.createElement('p');
-									tipP.style.fontStyle = 'italic';
-									tipP.style.color = '#666';
-									tipP.textContent = line;
-									contentDiv.appendChild(tipP);
-								} else {
-									const p = document.createElement('p');
-									p.textContent = line;
-									contentDiv.appendChild(p);
-								}
-							}
-						} else {
-							const p = document.createElement('p');
-							p.textContent = '暂无每日新闻更新';
-							contentDiv.appendChild(p);
-						}
-					})
-					.catch(error => {
-						console.error('请求出错:', error);
-						const contentDiv = document.querySelector('.content');
-						if (contentDiv) {
-							const p = document.createElement('p');
-							p.textContent = '获取新闻数据失败，请稍后再试';
-							contentDiv.appendChild(p);
-						}
-					});
-			});
-
-			// 延迟加载B站iframe
-			idleCallback(function() {
-				var bilibiliIframe = document.querySelector('#bilibiliContainer iframe');
-				if (bilibiliIframe && bilibiliIframe.dataset.src) {
-					bilibiliIframe.src = bilibiliIframe.dataset.src;
+						});
+					} else {
+						// 如果code不是200，显示msg字段的信息
+						const contentDiv = document.querySelector('.ziyuan');
+						const p = document.createElement('p');
+						p.textContent = data.message || '请求失败，没有返回有效信息';
+						contentDiv.appendChild(p);
+					}
 				}
+			})
+			.catch(error => {
+				console.error('请求出错:', error);
 			});
-		});
 	</script>
+		<script>
+// 使用 fetch API 请求每日60s URL
+fetch('https://60s-api.viki.moe/v2/60s?encoding=text')
+    .then(response => response.text()) // 修改为response.text()处理纯文本响应
+    .then(text => {
+        const contentDiv = document.querySelector('.content');
+        
+        // 清空现有内容
+        contentDiv.innerHTML = '';
+        
+        // 解析文本内容
+        const lines = text.split('\n').filter(line => line.trim()); // 分割文本并过滤空行
+        
+        if (lines.length > 0) {
+            // 添加标题（第一行）
+            const title = document.createElement('h3');
+            title.textContent = lines[0];
+            contentDiv.appendChild(title);
+            
+            // 添加新闻内容（从第二行开始）
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i];
+                
+                // 检查是否是"微语"部分
+                if (line.startsWith('【微语】')) {
+                    const tipP = document.createElement('p');
+                    tipP.style.fontStyle = 'italic';
+                    tipP.style.color = '#666';
+                    tipP.textContent = line;
+                    contentDiv.appendChild(tipP);
+                } else {
+                    const p = document.createElement('p');
+                    p.textContent = line;
+                    contentDiv.appendChild(p);
+                }
+            }
+        } else {
+            // 如果没有内容，显示错误信息
+            const p = document.createElement('p');
+            p.textContent = '暂无每日新闻更新';
+            contentDiv.appendChild(p);
+        }
+    })
+    .catch(error => {
+        console.error('请求出错:', error);
+        const contentDiv = document.querySelector('.content');
+        const p = document.createElement('p');
+        p.textContent = '获取新闻数据失败，请稍后再试';
+        contentDiv.appendChild(p);
+    });
 		</script>
 		<style>
 			.cover-image {
@@ -1038,29 +979,68 @@
 			}
 		</style>
 		<script>
-			// 延迟执行链接检测，避免阻塞首屏
-			window.addEventListener('load', function() {
-				// 检查链接是否有效的函数
-				function checkLink(url, containerId) {
-					var el = document.getElementById(containerId);
-					if (!el) return;
-					fetch(url, { method: 'HEAD', mode: 'no-cors' })
-						.then(function() { el.style.display = 'block'; })
-						.catch(function() { el.style.display = 'none'; });
-				}
+			// 监听B站收藏夹视频链接
+			checkIframeLoad("bilibiliContainer", "https://www.5201199.xyz/e/bili/index.html?id=3271958393");
 
-				// 监听摸鱼日历链接
-				checkLink("https://dayu.qqsuu.cn/moyurili/apis.php", "moyuContainer");
+			// 监听云盘资源链接
+			checkLink("https://www.pan.5201199.xyz/api/search", "panContainer");
 
-				// 监听随机一言代码链接
-				var hitokotoEl = document.getElementById('hitokotoContainer');
-				if (hitokotoEl) {
-					var testScript = document.createElement('script');
-					testScript.src = "https://v1.hitokoto.cn/?encode=js&select=%23hitokoto";
-					testScript.onload = function() { hitokotoEl.style.display = 'block'; };
-					testScript.onerror = function() { hitokotoEl.style.display = 'none'; };
-				}
-			});
+			// 监听60秒读懂世界链接
+			checkLink("https://60s-api.viki.moe/v2/60s?encoding=text", "worldContainer");
+
+			// 监听摸鱼日历链接
+			checkLink("https://dayu.qqsuu.cn/moyurili/apis.php", "moyuContainer");
+
+			// 监听随机一言代码链接
+			checkScriptLoad("hitokotoContainer", "https://v1.hitokoto.cn/?encode=js&select=%23hitokoto");			
+		
+			// 检查链接是否有效的函数
+			function checkLink(url, containerId) {
+				fetch(url, { method: 'HEAD' })
+					.then(response => {
+						if (response.ok) {
+							// 如果链接有效，显示容器
+							document.getElementById(containerId).style.display = 'block';
+						} else {
+							// 如果链接无效，隐藏容器
+							document.getElementById(containerId).style.display = 'none';
+						}
+					})
+					.catch(error => {
+						// 如果请求失败，隐藏容器
+						document.getElementById(containerId).style.display = 'none';
+					});
+			}
+
+			// 检查iframe是否成功加载内容的函数
+			function checkIframeLoad(containerId, iframeSrc) {
+				const iframe = document.createElement('iframe');
+				iframe.src = iframeSrc;
+				iframe.onload = function () {
+					// 如果iframe成功加载，显示容器
+					document.getElementById(containerId).style.display = 'block';
+				};
+				iframe.onerror = function () {
+					// 如果iframe加载失败，隐藏容器
+					document.getElementById(containerId).style.display = 'none';
+				};
+				// 这里不需要将iframe添加到页面上，只是用来检查链接的有效性
+			}
+
+			// 检查脚本是否成功加载的函数
+			function checkScriptLoad(containerId, scriptSrc) {
+				const script = document.createElement('script');
+				script.src = scriptSrc;
+				script.onload = function () {
+					// 如果脚本成功加载，显示容器
+					document.getElementById(containerId).style.display = 'block';
+				};
+				script.onerror = function () {
+					// 如果脚本加载失败，隐藏容器
+					document.getElementById(containerId).style.display = 'none';
+				};
+			}
+
 		</script>
 		<script>
 			function updateClock() {
@@ -1159,17 +1139,6 @@
 				webpushr('setup', { 'key': 'BD99F5j0E1eQHxPwSdt7LLoy_2AEUSnGxp8e3bFda-PcYZgi42VNFIucsXAbIVsjdrNr8ueyB6wK6G9MbMIIxMU' });</script>
 			<!-- 结束 WebPushr 跟踪代码 -->		
 </div>
-<script src="https://www.noisevip.cn/super-agent-embed.js" defer></script>
-<script>
-  window.VipSuperAgent.init({
-    apiBase: "https://www.noisevip.cn",
-    title: "Young宝藏阁",
-    subtitle: "跟你的龙虾聊",
-    compactHeader: true,
-    primaryColor: "#f97316",
-    anchorSelector: ".scroll-top-btn"
-  });
-</script>
 </body>
 <!-- 引入评论 -->		
 <script type="module">
@@ -1192,12 +1161,11 @@
          imageUploader: false,
          //不显示版权标志
          copyright: false,
-         // 禁用订阅功能（后端未配置SMTP邮件通知）
-         subscribe: false,
      });
   </script>
+<script src="./widgets/music-1/js/Meting.min.js" defer></script>
 <script src="./js/home-script.js" defer> </script>
-<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js" defer></script>
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
 <script>LA.init({ id: "KFqltKSkJgQTGD9l", ck: "KFqltKSkJgQTGD9l" })</script>
 <script src="js/home-rss.js" defer></script>
 <script src="js/loading.js" defer></script>
@@ -1210,5 +1178,4 @@
 	  document.head.appendChild(script);
 	}
   </script>
-  
 </html>
