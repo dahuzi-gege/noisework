@@ -2,7 +2,7 @@
 const texts = [
     { text: "头像右下角图标可切换背景哦！", elementId: "floatingText1", position: { top: "9%", right: "23%" } },
     { text: "点击切换模式查看更多哦", elementId: "floatingText2", position: { top: "30%", right: "14%" } },
-    { text: "相关配置请查看文档！", elementId: "floatingText3", position: { top: "45%", right: "8%" } },
+    { text: "好久没有见到你了！", elementId: "floatingText3", position: { top: "45%", right: "8%" } },
     { text: "主页更新了哦😯", elementId: "floatingText4", position: { top: "60%", right: "50%" } },
     { text: "想我了没！", elementId: "floatingText5", position: { top: "31%", right: "48%" } },
     { text: "知行合一", elementId: "floatingText6", position: { top: "68%", right: "20%" } },
@@ -10,7 +10,7 @@ const texts = [
     { text: "努力才会有收获哦！", elementId: "floatingText7", position: { top: "16%", right: "42%" } },
     { text: "常来看看，私聊我哦！", elementId: "floatingText8", position: { top: "19%", right: "12%" } },
     { text: "发现新宝藏啦！", elementId: "floatingText9", position: { top: "71%", right: "40%" } },
-    { text: "向下滑动评论留言哦！", elementId: "floatingText9", position: { top: "68%", right: "35%" } },
+    { text: "向下滑动更精彩哦！", elementId: "floatingText9", position: { top: "68%", right: "35%" } },
     // 添加更多文本和位置
   ];
 

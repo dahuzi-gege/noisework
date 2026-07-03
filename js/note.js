@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Default configuration
     const config = window.note || {
-        host: 'https://note.noisework.cn', //修改为你的域名
+        host: 'https://note.5201199.xyz', //修改为你的域名
         limit: '10',
         domId: '#note'
     };
@@ -401,7 +401,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const uid = host.split('-').pop();
             init({
                 el: `#${commentId}`,
-                serverURL: window.note.commentServer || 'https://ment.noisework.cn', // 使用配置中的评论服务器地址
+                serverURL: window.note.commentServer || 'https://ment.5201199.xyz', // 使用配置中的评论服务器地址
                 reaction: 'true',
                 meta: ['nick', 'mail', 'link'],
                 requiredMeta: ['mail', 'nick'],
