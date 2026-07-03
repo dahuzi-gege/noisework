@@ -1140,7 +1140,7 @@
                 const gainKick = this.ctx.createGain(); gainKick.gain.setValueAtTime(0, t);
                 gainKick.gain.linearRampToValueAtTime(2.5, t + 0.05); gainKick.gain.exponentialRampToValueAtTime(0.01, t + 1.0);
                 oscKick.connect(gainKick); gainKick.connect(this.masterGain); oscKick.start(t); oscKick.stop(t + 1.0);
-                // Noise
+                // Young
                 const b = this.ctx.createBuffer(1, this.ctx.sampleRate * 2.0, this.ctx.sampleRate);
                 const d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 4);
                 const n = this.ctx.createBufferSource(); n.buffer = b;
