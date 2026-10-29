@@ -11,6 +11,8 @@
 }
 
 .page-hub .chtitle {
+  flex: 1;
+  min-width: 0;
   margin-bottom: 0;
 }
 
@@ -30,12 +32,15 @@
 .page-links {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
-  gap: 12px;
+  gap: 13px;
 }
 
 .page-link {
-  --tone: #72a4ff;
-  --glow: rgba(114, 164, 255, 0.17);
+  min-height: 80px;
+  padding: 0 16px;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px -3px var(--glow);
+}
 
   position: relative;
   display: flex;
@@ -88,7 +93,7 @@
   place-items: center;
   color: var(--tone);
   border: 1px solid var(--glow);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--glow);
   font-size: 17px;
 }
