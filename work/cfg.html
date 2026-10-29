@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PN设备MAC分配表 · cfg在线分析工具</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%230B5CA3'/%3E%3Cpath d='M5 7h4v4H5zm5 0h4v4h-4zm5 0h4v4h-4zM5 12h4v4H5zm5 0h4v4h-4zm5 0h4v4h-4z' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#F3F6FA; --panel:#ffffff; --line:#D9E2EC; --line2:#E7EEF5;
+  --primary:#0B5CA3; --primary-2:#0A4D8F; --ink:#1B2733; --muted:#6B7A89;
+  --mac:#FFF6DE; --mac-line:#EBD6A0; --ok:#14743C; --chip:#E6EEF6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,"Segoe UI","Microsoft YaHei",system-ui,sans-serif;font-size:14px;line-height:1.5}
+.wrap{max-width:1500px;margin:0 auto;padding:16px}
+header{background:linear-gradient(135deg,#0B5CA3,#0A4D8F);color:#fff;border-radius:12px;padding:18px 20px;margin-bottom:14px}
+header h1{margin:0;font-size:20px;font-weight:700;letter-spacing:.5px}
+header .sub{margin-top:6px;font-size:12.5px;opacity:.92}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.stat{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:6px 14px}
+.stat b{font-size:17px;display:block;line-height:1.1}
+.stat span{font-size:11px;opacity:.85}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
+.toolbar input[type=text]{flex:1 1 200px;min-width:180px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#fff}
+.toolbar select{padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:14px}
+.btn{padding:9px 14px;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:600;color:#fff;background:var(--primary);transition:background .15s}
+.btn:hover{background:var(--primary-2)}
+.btn.ghost{background:#fff;color:var(--primary);border:1px solid var(--line);font-weight:500}
+.btn.ghost:hover{background:var(--chip)}
+.btn.up{border:1px dashed var(--primary);background:#EFF4FB;color:var(--primary)}
+.btn.up:hover{background:#DCE7F4}
+#cfgFile{display:none}
+.srcinfo{background:var(--chip);border:1px solid var(--line);padding:8px 14px;border-radius:8px;margin-bottom:12px;font-size:13px;color:#33506B}
+.hint{background:#EFF4FB;border-left:3px solid var(--primary);padding:10px 14px;border-radius:0 8px 8px 0;margin-bottom:12px;color:#33506B}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tablewrap{overflow:auto;max-height:72vh}
+table{width:100%;border-collapse:collapse;table-layout:fixed;white-space:nowrap}
+thead th{position:sticky;top:0;z-index:2;background:#E6EEF6;color:#16324C;font-weight:600;font-size:13px;padding:11px 10px;text-align:left;border-bottom:2px solid var(--primary);user-select:none}
+thead th[data-k]{cursor:pointer}
+thead th[data-k]:hover{background:#DCE7F4}
+thead th .arw{font-size:10px;color:var(--muted);margin-left:4px}
+tbody td{padding:8px 10px;border-bottom:1px solid var(--line2);vertical-align:middle;font-size:13px;overflow:hidden;text-overflow:ellipsis}
+tbody tr:hover{background:#F6FAFD}
+td.num{text-align:right;color:var(--muted);width:52px}
+td.ip{font-family:"Consolas","Menlo",monospace;font-size:12.5px}
+td.desc{white-space:normal;word-break:break-all;line-height:1.45}
+.mac-cell{width:210px}
+.mac-cell input{width:100%;padding:6px 8px;border:1px solid var(--mac-line);border-radius:6px;background:var(--mac);font-family:"Consolas","Menlo",monospace;font-size:12.5px;color:var(--ink)}
+.mac-cell input:focus{outline:2px solid var(--primary);border-color:var(--primary)}
+.mac-cell input::placeholder{color:#B9A85F}
+colgroup col.c1{width:52px}
+colgroup col.c2{width:120px}
+colgroup col.c3{width:220px}
+colgroup col.c4{width:200px}
+colgroup col.c5{width:70px}
+colgroup col.c6{width:130px}
+colgroup col.c7{width:130px}
+colgroup col.c8{width:210px}
+footer{margin-top:14px;color:var(--muted);font-size:12.5px;line-height:1.7}
+#empty{display:none;padding:40px;text-align:center;color:var(--muted)}
+@media (max-width:720px){header{padding:14px;border-radius:10px}header h1{font-size:17px}.toolbar input[type=text]{min-width:100%}.btn{flex:1 1 auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>S7-400 PROFINET(PN) 通讯设备 · MAC地址分配表</h1>
+    <div class="sub" id="subtitle"></div>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="srcinfo" id="srcinfo"></div>
+
+  <div class="hint">黄色 MAC 列现场按设备铭牌填写，数据自动保存在本浏览器（刷新不丢）；填完可导出 CSV，用 Excel / WPS 打开或存档。换个 .cfg 直接点「导入 .cfg 重新分析」即可复用本工具。</div>
+
+  <div class="toolbar">
+    <label class="btn up" for="cfgFile">导入 .cfg 重新分析</label>
+    <input type="file" id="cfgFile" accept=".cfg,.txt">
+    <input type="text" id="search" placeholder="搜索站名 / 描述 / IP…">
+    <select id="typeFilter"><option value="">全部设备类型</option></select>
+    <button class="btn" id="exportBtn">导出 CSV</button>
+    <button class="btn ghost" id="resetBtn">清空已填 MAC</button>
+  </div>
+
+  <div class="panel">
+    <div class="tablewrap">
+      <table id="tbl">
+        <colgroup>
+          <col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"><col class="c6"><col class="c7"><col class="c8">
+        </colgroup>
+        <thead>
+          <tr>
+            <th data-k="devno">设备编号 <span class="arw"></span></th>
+            <th data-k="name">设备名称 <span class="arw"></span></th>
+            <th data-k="desc">设备描述 <span class="arw"></span></th>
+            <th data-k="type">设备类型 <span class="arw"></span></th>
+            <th data-k="fw">固件 <span class="arw"></span></th>
+            <th data-k="ip">IP地址 <span class="arw"></span></th>
+            <th data-k="mask">子网掩码 <span class="arw"></span></th>
+            <th>MAC地址（待填写）</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div id="empty">未找到匹配的设备，请调整搜索或筛选条件。</div>
+  </div>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+const RAW_DATA = [{"name": "ET1-ZZSB", "desc": "造纸湿部仪表(ET1)", "type": "西门子 6DL1 155-6AU00-0PM0 (ET200pro)", "fw": "V1.2", "ip": "172.16.20.11", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "1"}, {"name": "ET2-ZZSB2", "desc": "造纸湿部仪表柜(ET2)", "type": "西门子 6DL1 155-6AU00-0PM0 (ET200pro)", "fw": "V1.2", "ip": "172.16.20.12", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "2"}, {"name": "ET3-ZZGB", "desc": "造纸干部仪表1#柜正面(ET3)", "type": "西门子 6DL1 155-6AU00-0PM0 (ET200pro)", "fw": "V1.2", "ip": "172.16.20.13", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "3"}, {"name": "ET4-ZZGB2", "desc": "造纸干部仪表1#柜背面(ET4)", "type": "西门子 6DL1 155-6AU00-0PM0 (ET200pro)", "fw": "V1.2", "ip": "172.16.20.14", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "4"}, {"name": "ET5-ZZGB3", "desc": "造纸干部仪表2#柜(ET5)", "type": "西门子 6DL1 155-6AU00-0PM0 (ET200pro)", "fw": "V1.2", "ip": "172.16.20.15", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "5"}, {"name": "ET6-ZZDQ", "desc": "造纸电气1#柜(ET6)", "type": "西门子 6DL1 155-6AU00-0PM0 (ET200pro)", "fw": "V1.2", "ip": "172.16.20.16", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "6"}, {"name": "ET7-ZZDQ2", "desc": "造纸电气2#柜(ET7)接线表", "type": "西门子 6DL1 155-6AU00-0PM0 (ET200pro)", "fw": "V1.2", "ip": "172.16.20.17", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "7"}, {"name": "ET8-ZZHG", "desc": "造纸化工柜(ET8)", "type": "西门子 6DL1 155-6AU00-0PM0 (ET200pro)", "fw": "V1.2", "ip": "172.16.20.18", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "8"}, {"name": "P31108", "desc": "面二段除砂器泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.20", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "9"}, {"name": "P31642", "desc": "1#冷却水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.21", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "10"}, {"name": "P31643", "desc": "2#冷却水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.22", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "11"}, {"name": "P31644", "desc": "3#冷却水泵（备用）", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.23", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "12"}, {"name": "P31114", "desc": "面五段除砂器泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.24", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "13"}, {"name": "E31650-1", "desc": "1#冷却塔风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.25", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "14"}, {"name": "E31650-2", "desc": "2#冷却塔风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.26", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "15"}, {"name": "E31650-3", "desc": "3#冷却塔风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.27", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "16"}, {"name": "E31650-4", "desc": "4#冷却塔风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.28", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "17"}, {"name": "E31411", "desc": "白水回收多圆盘过滤机主传动电机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.29", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "18"}, {"name": "P31502", "desc": "伏损纸边浆泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.30", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "19"}, {"name": "P31106", "desc": "面一段除砂器泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.31", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "20"}, {"name": "C31504-1", "desc": "压榨损纸池 1#搅拌器", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.32", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "21"}, {"name": "C31504-2", "desc": "压榨损纸池 2#搅拌器", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.33", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "22"}, {"name": "P31503", "desc": "伏损浆泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.34", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "23"}, {"name": "P31505", "desc": "压榨损纸浆泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.35", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "24"}, {"name": "P31509", "desc": "压光损纸浆泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.36", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "25"}, {"name": "C31508-1", "desc": "压光损纸池 1#搅拌器", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.37", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "26"}, {"name": "C31508-2", "desc": "压光损纸池 2#搅拌器", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.38", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "27"}, {"name": "P31110", "desc": "面三段除砂器泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.39", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "28"}, {"name": "M37106", "desc": "复卷机剥纸电机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.40", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "29"}, {"name": "M37107", "desc": "复卷机吸纸边风机1#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.41", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "30"}, {"name": "M37108", "desc": "复卷机吸纸边风机2#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.42", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "31"}, {"name": "P31513", "desc": "复卷机损纸浆泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.43", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "32"}, {"name": "P31647", "desc": "1#冷却水塔供水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.44", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "33"}, {"name": "P31648", "desc": "2#冷却水塔供水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.45", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "34"}, {"name": "P31649", "desc": "3#冷却水塔供水泵（备用）", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.46", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "35"}, {"name": "E31705", "desc": "淀粉加料仓罗茨风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.47", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "36"}, {"name": "M32041", "desc": "网部排风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.48", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "37"}, {"name": "M31944", "desc": "11#排水泵A", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.49", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "38"}, {"name": "P31119", "desc": "面二段筛进浆泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.50", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "39"}, {"name": "P31211", "desc": "底二段筛进浆泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.51", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "40"}, {"name": "M31652", "desc": "冷冻机进水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.52", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "41"}, {"name": "M31654", "desc": "冷冻机组中间池供水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.53", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "42"}, {"name": "M31656", "desc": "冷冻机组冷却塔循环水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.54", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "43"}, {"name": "F32005", "desc": "前烘稳纸器引纸区排风机3#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.55", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "44"}, {"name": "F32018", "desc": "前烘稳纸器引纸区排风机4#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.56", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "45"}, {"name": "P31662", "desc": "真空辊润滑水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.57", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "46"}, {"name": "P31717", "desc": "1#熬胶锅进料泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.58", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "47"}, {"name": "P31718", "desc": "2#熬胶锅进料泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.59", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "48"}, {"name": "P31719", "desc": "3#熬胶锅进料泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.60", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "49"}, {"name": "P31729", "desc": "1#胶料翻料泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.61", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "50"}, {"name": "P31730", "desc": "2#胶料翻料泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.62", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "51"}, {"name": "P31736", "desc": "1#热水泵  ", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.63", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "52"}, {"name": "P31737", "desc": "2#热水泵  ", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.64", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "53"}, {"name": "P31204", "desc": "底抄前泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.65", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "54"}, {"name": "MD500PN2-14", "desc": "3#低压风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.66", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "55"}, {"name": "F32010", "desc": "前烘气罩送风机1#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.67", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "56"}, {"name": "F32017", "desc": "前烘气罩送风机2#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.68", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "57"}, {"name": "F32023", "desc": "前烘气罩送风机3#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.69", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "58"}, {"name": "F32042", "desc": "网部高压排风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.70", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "59"}, {"name": "F31301", "desc": "1#低压风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.71", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "60"}, {"name": "M31945", "desc": "11#排水泵B", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.72", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "61"}, {"name": "M31947", "desc": "12#排水泵B", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.73", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "62"}, {"name": "F31301-1", "desc": "4#低压风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.74", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "63"}, {"name": "P31715", "desc": "2#表胶生淀粉转移泵（备用）", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.75", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "64"}, {"name": "P31417", "desc": "清滤液泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.76", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "65"}, {"name": "P31612", "desc": "网压部高压水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.77", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "66"}, {"name": "P31613", "desc": "网压部高压水泵（备用）", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.78", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "67"}, {"name": "F32006", "desc": "前烘气罩排风机1#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.79", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "68"}, {"name": "F32012", "desc": "前烘气罩排风机2#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.80", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "69"}, {"name": "F32019", "desc": "前烘气罩排风机3#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.81", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "70"}, {"name": "F32026", "desc": "后烘气罩排风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.82", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "71"}, {"name": "A31419", "desc": "回收浆池搅拌器", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.83", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "72"}, {"name": "P31745", "desc": "顶辊回流泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.84", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "73"}, {"name": "P31746", "desc": "顶辊回流泵（备用）", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.85", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "74"}, {"name": "P31755", "desc": "底辊回流泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.86", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "75"}, {"name": "P31756", "desc": "底辊回流泵（备用）", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.87", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "76"}, {"name": "F31302", "desc": "2#低压风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.88", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "77"}, {"name": "F32030", "desc": "后烘汽罩送风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.89", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "78"}, {"name": "P31407", "desc": "多盘白水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.90", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "79"}, {"name": "F32011", "desc": "前烘稳纸器工作区排风机3#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.91", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "80"}, {"name": "A31101", "desc": "面成浆池搅拌器", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.92", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "81"}, {"name": "A31103", "desc": "面抄前池搅拌器", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.93", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "82"}, {"name": "P31122", "desc": "面除砂器白水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.94", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "83"}, {"name": "A31201", "desc": "底成浆池搅拌器", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.95", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "84"}, {"name": "A31203", "desc": "底抄前池搅拌器", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.96", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "85"}, {"name": "P31214", "desc": "尾渣泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.97", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "86"}, {"name": "P31602", "desc": "密封水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.98", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "87"}, {"name": "P31603", "desc": "密封水泵（备用）", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.99", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "88"}, {"name": "P31604", "desc": "辅料在线稀释水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.100", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "89"}, {"name": "P31112", "desc": "面四段除砂器泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.101", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "90"}, {"name": "P31406", "desc": "底稀白水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.102", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "91"}, {"name": "P31614", "desc": "压部低压水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.103", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "92"}, {"name": "P31615", "desc": "压部低压水泵（备用）", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.104", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "93"}, {"name": "P31742", "desc": "顶辊上料泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.105", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "94"}, {"name": "P31743", "desc": "顶辊上料泵（备用）", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.106", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "95"}, {"name": "P31752", "desc": "底辊上料泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.107", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "96"}, {"name": "P31753", "desc": "底辊上料泵（备用）", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.108", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "97"}, {"name": "P31102", "desc": "面成浆泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.109", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "98"}, {"name": "P31404", "desc": "面稀白水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.110", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "99"}, {"name": "P31421", "desc": "垫层浆泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.111", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "100"}, {"name": "P31625", "desc": "纸幅喷除水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.112", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "101"}, {"name": "P31623", "desc": "网部低压水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.113", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "102"}, {"name": "P31624", "desc": "网部低压水泵（备用）", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.114", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "103"}, {"name": "F32024", "desc": "后烘稳纸器引纸区排风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.115", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "104"}, {"name": "F32025", "desc": "后烘稳纸器工作区排风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.116", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "105"}, {"name": "P31732", "desc": "1#淀粉供料泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.117", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "106"}, {"name": "P31733", "desc": "2#淀粉供料泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.118", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "107"}, {"name": "P31734", "desc": "3#淀粉供料泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.119", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "108"}, {"name": "F32002", "desc": "前烘稳纸器工作区排风机1#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.120", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "109"}, {"name": "F32004", "desc": "前烘稳纸器工作区排风机2#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.121", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "110"}, {"name": "M31948", "desc": "12#排水泵B", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.122", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "111"}, {"name": "M31950", "desc": "13#排水泵A", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.123", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "112"}, {"name": "P31854", "desc": "毛布碱液泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.124", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "113"}, {"name": "A31401", "desc": "面稀白水池搅拌器", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.125", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "114"}, {"name": "A31402", "desc": "底稀白水池搅拌器", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.126", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "115"}, {"name": "P31714", "desc": "1#表胶生淀粉转移泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.127", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "116"}, {"name": "P31104", "desc": "面抄前泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.128", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "117"}, {"name": "P31415", "desc": "浊滤液泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.129", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "118"}, {"name": "P31418", "desc": "超清滤液泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.130", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "119"}, {"name": "P31420", "desc": "回收浆泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.131", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "120"}, {"name": "P31605", "desc": "车间清水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.132", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "121"}, {"name": "P31606", "desc": "车间清水泵（备用）", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.133", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "122"}, {"name": "F32001", "desc": "前烘稳纸器引纸区排风机1#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.134", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "123"}, {"name": "F32003", "desc": "前烘稳纸器引纸区排风机2#", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.135", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "124"}, {"name": "M31320", "desc": "网部抽湿风机", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.136", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "125"}, {"name": "P31202", "desc": "底成浆泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.137", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "126"}, {"name": "P31403", "desc": "面调浓白水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.138", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "127"}, {"name": "P31416", "desc": "多盘剥离水泵", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.139", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "128"}, {"name": "M31712", "desc": "淀粉计量螺旋  ", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.140", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "129"}, {"name": "E31207", "desc": "底网前筛", "type": "汇川 MD580", "fw": "", "ip": "172.16.20.141", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "130"}, {"name": "E31117", "desc": "面网前筛", "type": "汇川 MD580", "fw": "", "ip": "172.16.20.142", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "131"}, {"name": "E31209", "desc": "底层稀释水筛", "type": "汇川 MD580", "fw": "", "ip": "172.16.20.143", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "132"}, {"name": "E31212", "desc": "底二段压力筛", "type": "汇川 MD580", "fw": "", "ip": "172.16.20.144", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "133"}, {"name": "E31120", "desc": "面二段压力筛", "type": "汇川 MD580", "fw": "", "ip": "172.16.20.145", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "134"}, {"name": "P31513-1", "desc": "复卷机损纸池 1#搅拌器", "type": "汇川 MD580", "fw": "", "ip": "172.16.20.146", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "135"}, {"name": "P31513-2", "desc": "复卷机损纸池 2#搅拌器", "type": "汇川 MD580", "fw": "", "ip": "172.16.20.147", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "136"}, {"name": "C31506-1", "desc": "施胶损纸池 1#搅拌器", "type": "汇川 MD580", "fw": "", "ip": "172.16.20.148", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "137"}, {"name": "C31506-2", "desc": "施胶损纸池 2#搅拌器", "type": "汇川 MD580", "fw": "", "ip": "172.16.20.149", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "138"}, {"name": "P31507", "desc": "施胶损纸浆泵", "type": "汇川 MD580", "fw": "", "ip": "172.16.20.150", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "139"}, {"name": "C31510-1", "desc": "卷取损纸池 1#搅拌器", "type": "汇川 MD580", "fw": "", "ip": "172.16.20.151", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "140"}, {"name": "C31510-2", "desc": "卷取损纸池 2#搅拌器", "type": "汇川 MD580", "fw": "", "ip": "172.16.20.152", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "141"}, {"name": "P31511", "desc": "卷取损纸浆泵", "type": "汇川 MD580", "fw": "", "ip": "172.16.20.153", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "142"}, {"name": "M31951", "desc": "13#排水泵B", "type": "汇川 MD500PN2", "fw": "", "ip": "172.16.20.154", "mask": "255.255.255.0", "subsys": "ZZ_FildBus", "devno": "143"}];
+const LS_PREFIX = "pn_mac_";
+let state = {query:"", type:"", key:"name", dir:1};
+let currentSource = "simatic 400(zz).cfg（内嵌默认数据）";
+
+/* ============ cfg 解析器（浏览器内直接解析任意 .cfg）============ */
+const BRAND={inovance:'汇川',siemens:'西门子',schneider:'施耐德',abb:'ABB',danfoss:'丹佛斯',lenze:'伦茨',wago:'万可',beckhoff:'倍福',turck:'图尔克',ifm:'易福门','pepperl-fuchs':'倍加福',sanyo:'三洋',panasonic:'松下',mitsubishi:'三菱',omron:'欧姆龙',yaskawa:'安川',rockwell:'罗克韦尔',bosch:'博世',fanuc:'发那科',festo:'费斯托',parker:'派克',moeller:'穆勒',phoenix:'菲尼克斯',profinet:'PROFINET'};
+const GSDML_RE=/^GSDML-[^-]+-([^-]+)-([^-]+)-/i;
+
+function devtype(prod){
+  if(String(prod).startsWith('S2:6DL1')) return '西门子 6DL1 155-6AU00-0PM0 (ET200pro)';
+  const m=GSDML_RE.exec(prod);
+  if(m){ const vendor=m[1].toLowerCase(), device=m[2]; return (BRAND[vendor]||vendor)+' '+device; }
+  return String(prod);
+}
+function hex2ip(h){
+  h=String(h||''); if(h.length<8) return '';
+  h=h.padStart(8,'0');
+  return [0,2,4,6].map(a=>parseInt(h.substr(a,2),16)).join('.');
+}
+function parseCfg(text){
+  const lines=text.split(/\r?\n/);
+  const devRe=/^IOSUBSYSTEM\s+(\d+),\s*IOADDRESS\s+(\d+),\s*"([^"]*)"(?:\s+"([^"]*)")?\s*,\s*"([^"]*)"\s*$/;
+  const slotRe=/^IOSUBSYSTEM\s+(\d+),\s*IOADDRESS\s+(\d+),\s*SLOT\s+(\d+),\s*"([^"]*)",\s*"([^"]*)"\s*$/;
+  const macRe=/MACADDRESS\s+"([0-9A-Fa-f]+)"/;
+  const ipRe=/IPADDRESS\s+"([0-9A-Fa-f]+)"/;
+  const maskRe=/SUBNETMASK\s+"([0-9A-Fa-f]+)"/;
+  const subMap={100:'SystemBus',101:'ZZ_FildBus'};
+  const devs=[];
+  lines.forEach(line=>{
+    const m=devRe.exec(line.trim());
+    if(m){ devs.push({subsys:m[1],ioaddr:m[2],prod:m[3],fw:m[4]||'',name:m[5],comment:'',mac:'',ip:'',mask:''}); }
+  });
+  const map={}; devs.forEach(d=>map[d.subsys+'|'+d.ioaddr+'|'+d.name]=d);
+  for(let i=0;i<lines.length;i++){
+    const m=devRe.exec(lines[i].trim());
+    if(!m) continue;
+    const d=map[m[1]+'|'+m[2]+'|'+m[5]]; if(!d) continue;
+    for(let j=i+1;j<lines.length;j++){
+      const t=lines[j].trim();
+      if(t==='END') break;
+      if(t.indexOf('COMMENT')===0){
+        const cm=/COMMENT\s+"(.*)"\s*$/.exec(t);
+        if(cm) d.comment=cm[1];
+      }
+    }
+  }
+  for(let i=0;i<lines.length;i++){
+    const m=slotRe.exec(lines[i].trim());
+    if(!m) continue;
+    const d=map[m[1]+'|'+m[2]+'|'+m[5]]; if(!d || d.mac) continue;
+    let j=i+1, blk='';
+    for(;j<lines.length;j++){ const t=lines[j].trim(); if(t==='END') break; blk+=t+'\n'; }
+    const mm=macRe.exec(blk); if(!mm) continue;
+    d.mac=mm[1];
+    const ip=ipRe.exec(blk); if(ip) d.ip=ip[1];
+    const mk=maskRe.exec(blk); if(mk) d.mask=mk[1];
+  }
+  devs.sort((a,b)=> a.subsys===b.subsys ? (parseInt(a.ioaddr)-parseInt(b.ioaddr)) : a.subsys.localeCompare(b.subsys));
+  return devs.map(d=>({name:d.name,desc:(d.comment||'—'),type:devtype(d.prod),fw:d.fw,ip:hex2ip(d.ip),mask:hex2ip(d.mask),subsys:(subMap[d.subsys]||d.subsys),devno:d.ioaddr}));
+}
+
+/* ============ 渲染 ============ */
+function macVal(name){ return localStorage.getItem(LS_PREFIX+name) || ""; }
+function ipnum(ip){ return ip.split(".").reduce((a,x,i)=>a+(parseInt(x,10)||0)*Math.pow(256,3-i),0); }
+function netOf(ip,mask){ const a=ip.split(".").map(Number), b=mask.split(".").map(Number); return a.map((x,i)=>x&b[i]).join("."); }
+function prefixOf(mask){ return mask.split(".").reduce((n,o)=>n+(parseInt(o,10).toString(2).match(/1/g)||[]).length,0); }
+
+function renderStats(){
+  const total=RAW_DATA.length, by={}, filled={mac:0};
+  RAW_DATA.forEach(d=>{ by[d.type]=(by[d.type]||0)+1; if(macVal(d.name)) filled.mac++; });
+  const el=document.getElementById("stats");
+  el.innerHTML=`<div class="stat"><b>${total}</b><span>设备总数</span></div>`+
+               `<div class="stat"><b>${filled.mac}</b><span>已填 MAC</span></div>`;
+  Object.keys(by).sort((a,b)=>a.localeCompare(b)).forEach(t=>{
+    const div=document.createElement("div"); div.className="stat";
+    div.innerHTML=`<b>${by[t]}</b><span>${t}</span>`; el.appendChild(div);
+  });
+  // 副标题完全由数据动态推导
+  const subsys=[...new Set(RAW_DATA.map(d=>d.subsys||"未知"))].join(" / ");
+  const nets=[...new Set(RAW_DATA.map(d=>(d.ip&&d.mask)?netOf(d.ip,d.mask):null))].filter(Boolean);
+  let netTxt="—";
+  if(nets.length){
+    netTxt=nets.map(n=>{ const mk=RAW_DATA.find(d=>d.ip&&d.mask&&netOf(d.ip,d.mask)===n); return `${n}/${prefixOf(mk.mask)}`; }).join("、");
+  }
+  document.getElementById("subtitle").textContent=
+    `子系统：${subsys}　网段：${netTxt}　来源：${currentSource}`;
+  document.getElementById("foot").textContent=
+    "提示：组态中 MAC 均为占位值 08-00-06-01-00-00（非设备真实 MAC），请现场按设备铭牌填写到 MAC 列。填写内容仅保存在本机浏览器，清除浏览器数据会丢失，建议导出 CSV 备份。";
+}
+
+function render(){
+  renderStats();
+  const q=state.query.toLowerCase();
+  let rows=RAW_DATA.filter(d=>{
+    const okQ=!q || d.name.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q) || d.ip.includes(q);
+    const okT=!state.type || d.type===state.type;
+    return okQ && okT;
+  });
+  const k=state.key, dir=state.dir;
+  if(k==="devno") rows.sort((a,b)=>(parseInt(a.devno,10)-parseInt(b.devno,10))*dir);
+  else if(k==="name") rows.sort((a,b)=>a.name.localeCompare(b.name)*dir);
+  else if(k==="type") rows.sort((a,b)=>a.type.localeCompare(b.type)*dir);
+  else if(k==="desc") rows.sort((a,b)=>a.desc.localeCompare(b.desc)*dir);
+  else if(k==="fw") rows.sort((a,b)=>(a.fw||"").localeCompare(b.fw||"")*dir);
+  else if(k==="ip") rows.sort((a,b)=>(ipnum(a.ip)-ipnum(b.ip))*dir);
+  else if(k==="mask") rows.sort((a,b)=>(ipnum(a.mask)-ipnum(b.mask))*dir);
+  const tb=document.getElementById("tbody");
+  tb.innerHTML=rows.map((d,i)=>{
+    return `<tr>
+      <td class="num">${d.devno}</td>
+      <td title="${d.name}"><b>${d.name}</b></td>
+      <td class="desc" title="${d.desc}">${d.desc}</td>
+      <td>${d.type}</td>
+      <td>${d.fw||"—"}</td>
+      <td class="ip">${d.ip}</td>
+      <td class="ip">${d.mask}</td>
+      <td class="mac-cell"><input type="text" data-name="${d.name}" value="${macVal(d.name)}" placeholder="08-00-06-01-00-00 占位" spellcheck="false"></td>
+    </tr>`;
+  }).join("");
+  document.getElementById("empty").style.display=rows.length?"none":"block";
+}
+
+function initTypeFilter(){
+  const sel=document.getElementById("typeFilter");
+  sel.innerHTML='<option value="">全部设备类型</option>';
+  [...new Set(RAW_DATA.map(d=>d.type))].sort((a,b)=>a.localeCompare(b)).forEach(t=>{
+    const o=document.createElement("option"); o.value=t; o.textContent=t; sel.appendChild(o);
+  });
+}
+
+/* ============ 交互 ============ */
+document.getElementById("tbody").addEventListener("input", e=>{
+  const t=e.target; if(!t || !t.hasAttribute("data-name")) return;
+  const isSn=t.dataset.field==="sn";
+  localStorage.setItem(isSn ? LS_PREFIX+"sn_"+t.dataset.name : LS_PREFIX+t.dataset.name,
+                        isSn ? t.value : t.value.toUpperCase());
+});
+document.getElementById("search").addEventListener("input", e=>{ state.query=e.target.value; render(); });
+document.getElementById("typeFilter").addEventListener("change", e=>{ state.type=e.target.value; render(); });
+document.querySelectorAll("thead th[data-k]").forEach(th=>{
+  th.addEventListener("click", ()=>{
+    const k=th.dataset.k;
+    if(state.key===k) state.dir=-state.dir; else { state.key=k; state.dir=1; }
+    document.querySelectorAll("thead th[data-k] .arw").forEach(a=>a.textContent="");
+    const a=th.querySelector(".arw"); if(a) a.textContent=state.dir>0?"▲":"▼";
+    render();
+  });
+});
+document.getElementById("resetBtn").addEventListener("click", ()=>{
+  if(confirm("确定清空所有已填写的 MAC 地址？此操作不可恢复。")){
+    RAW_DATA.forEach(d=>localStorage.removeItem(LS_PREFIX+d.name)); render();
+  }
+});
+document.getElementById("exportBtn").addEventListener("click", ()=>{
+  const head=["设备编号","设备名称","设备描述","设备类型","固件版本","IP地址","子网掩码","MAC地址"];
+  const esc=v=>{ v=String(v==null?"":v); return /[",\n]/.test(v)? '"'+v.replace(/"/g,'""')+'"' : v; };
+  const lines=[head.map(esc).join(",")];
+  RAW_DATA.forEach(d=>lines.push([d.devno,d.name,d.desc,d.type,d.fw||"",d.ip,d.mask,macVal(d.name)].map(esc).join(",")));
+  const blob=new Blob(["\uFEFF"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="PN设备MAC分配表_已填.csv"; document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(a.href);
+});
+document.getElementById("cfgFile").addEventListener("change", async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const buf=await f.arrayBuffer();
+  let text;
+  try{ text=new TextDecoder("gbk").decode(buf); }
+  catch(err){ text=new TextDecoder("utf-8").decode(buf); }
+  const data=parseCfg(text);
+  if(!data.length){ alert("未解析到 PROFINET IO 设备，请确认是 STEP7 组态(.cfg) 文件。"); return; }
+  RAW_DATA.length=0; RAW_DATA.push(...data);
+  currentSource=f.name;
+  state={query:"",type:"",key:"name",dir:1};
+  document.getElementById("search").value="";
+  document.querySelectorAll("thead th[data-k] .arw").forEach(a=>a.textContent="");
+  initTypeFilter(); render();
+  document.getElementById("srcinfo").textContent="已导入： "+f.name+"　设备 "+data.length+" 台。在下方填写 MAC，导出 CSV 保存。";
+  e.target.value="";
+});
+
+initTypeFilter();
+render();
+</script>
+</body>
+</html>
